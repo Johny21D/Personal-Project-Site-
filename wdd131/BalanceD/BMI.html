@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BalanceD</title>
+    <link rel="stylesheet" href="BMI.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="../Images/Logo-removebg-preview.png" alt="Logo" onerror="this.style.display='none'">
+        <p>BalanceD</p>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="BalanceD.html">Home</a></li>
+            <li><a href="Child-page">BMI</a></li>
+            <li><a href="About Us">About Us</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="content-wrapper">
+
+    <div class="page-hero">
+        <h1>BMI Calculator</h1>
+        <p>Enter your details to get personalized food & exercise recommendations.</p>
+    </div>
+
+    <!-- ── Form Card ── -->
+    <div class="form-card">
+        <h2 class="form-title">Your Details</h2>
+        <form id="bmi-form">
+            <div class="fields-grid">
+                <div class="field-container">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" id="weight" class="input-field" placeholder="e.g. 70" min="1" required>
+                </div>
+                <div class="field-container">
+                    <label for="height">Height (cm)</label>
+                    <input type="number" id="height" class="input-field" placeholder="e.g. 175" min="1" required>
+                </div>
+                <div class="field-container">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" class="input-field" placeholder="e.g. 25" min="1" required>
+                </div>
+                <div class="field-container">
+                    <label>Gender</label>
+                    <div class="gender-toggle">
+                        <button type="button" class="gender-btn active" data-gender="male">♂ Male</button>
+                        <button type="button" class="gender-btn" data-gender="female">♀ Female</button>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn" id="calc-btn">Calculate BMI &amp; Get Recommendations</button>
+        </form>
+    </div>
+
+    <!-- ── Results Panel ── -->
+    <div id="results-panel">
+        <div class="results-header">
+            <div class="bmi-badge">
+                <span class="bmi-number" id="bmi-value">—</span>
+                <span class="bmi-label">BMI Score</span>
+                <span class="bmi-category" id="bmi-category">—</span>
+            </div>
+            <div class="bmi-bar-wrap">
+                <div class="bmi-bar-title">BMI Scale</div>
+                <div class="bmi-bar">
+                    <div class="bmi-indicator" id="bmi-indicator" style="left: 0%"></div>
+                </div>
+                <div class="bmi-bar-labels">
+                    <span>Underweight<br>&lt;18.5</span>
+                    <span>Normal<br>18.5–24.9</span>
+                    <span>Overweight<br>25–29.9</span>
+                    <span>Obese<br>≥30</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ai-section">
+            <div class="ai-section-title">Personalized Recommendations</div>
+            <div id="ai-output">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <span>Generating your plan…</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Static Content ── -->
+    <article class="content-block">
+        <h2 class="content-heading">Why Track Your BMI?</h2>
+        <p class="content-text">
+            BMI is a simple yet powerful indicator of your overall health. Understanding where you stand helps you make informed choices about your diet and physical activity to live a more balanced life.
+        </p>
+    </article>
+
+    <article class="split-block">
+        <div class="placeholder-box img-square"></div>
+        <div style="flex:1; text-align:right;">
+            <h2 class="content-heading">Small Steps, Big Change</h2>
+            <p class="content-text" style="margin-left:auto;">
+                Consistency beats perfection. Even small daily habits — a 20-minute walk, swapping sugary drinks for water — compound into lasting health transformations over time.
+            </p>
+        </div>
+    </article>
+
+    <section class="placeholder-box img-banner"></section>
+</main>
+
+<footer>
+    <nav>
+        <ul>
+            <li><a href="Facebook">Facebook</a></li>
+            <li><a href="Instagram">Instagram</a></li>
+            <li><a href="Contact us">Contact Us</a></li>
+        </ul>
+    </nav>
+</footer>
+
+</body>
+</html>

@@ -3,10 +3,10 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --brown:        #6D564B;
+            --brown:        #000000;
             --brown-dark:   #4a3830;
-            --green-dark:   #2E7D32;
-            --green-mid:    #4CAF50;
+            --green-dark:   #000000;
+            --green-mid:    #000000;
             --green-light:  #A5D6A7;
             --cream:        #f8f3e8;
             --cream-dark:   #f0dea4;
@@ -117,7 +117,7 @@
             display: inline-block;
             background: rgba(76,175,80,0.2);
             color: var(--green-light);
-            border: 1px solid rgba(165,214,167,0.3);
+            border: 1px solid rgba(0, 0, 0, 0.3);
             border-radius: 99px;
             padding: 5px 16px;
             font-size: 0.78rem;
@@ -160,7 +160,7 @@
             border: none;
             cursor: pointer;
         }
-        .btn-primary:hover { background: #1b5e20; transform: translateY(-1px); }
+        .btn-primary:hover { background: #000000; transform: translateY(-1px); }
 
         .btn-outline {
             background: transparent;
@@ -406,7 +406,7 @@
 
         /* ─── CTA Banner ─── */
         .cta-section {
-            background: linear-gradient(135deg, var(--green-dark) 0%, #1b5e20 100%);
+            background: linear-gradient(135deg, var(--green-dark) 0%, #000000 100%);
             padding: 70px 5%;
             text-align: center;
             position: relative;

@@ -35,11 +35,11 @@
             box-shadow: 0 2px 12px rgba(46,125,50,0.06);
         }
         .logo { display: flex; align-items: center; gap: 10px; }
-        .logo img { height: 36px; }
+        .logo img { height: 100px; }
         .logo p { font-family: 'Fraunces', serif; font-size: 1.4rem; color: var(--green-dark); font-weight: 700; }
         nav ul { list-style: none; display: flex; gap: 28px; }
         nav ul li a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; transition: color 0.2s; }
-        nav ul li a:hover { color: var(--green-dark); }
+
 
         /* ─── Main Layout ─── */
         .content-wrapper {
@@ -219,32 +219,6 @@
         }
         .bmi-bar-labels { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); }
 
-        /* AI Response Area */
-        .ai-section { margin-top: 28px; }
-        .ai-section-title {
-            font-family: 'Fraunces', serif;
-            font-size: 1.2rem;
-            color: var(--green-dark);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .ai-section-title::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 20px;
-            background: var(--green-mid);
-            border-radius: 2px;
-        }
-
-        .recommendation-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
         .rec-card {
             border: 1.5px solid var(--border);
             border-radius: 10px;
@@ -351,3 +325,6 @@
             .bmi-badge { width: 100%; }
             header { padding: 12px 20px; }
         }
+
+
+

@@ -1,6 +1,3 @@
-// ─── 1. ARRAYS of meal and workout options ───────────────────────────────────
-// Each item has a "category" so we can filter by BMI result
-
 const meals = [
     { name: "Oatmeal with berries",      category: "underweight", emoji: "🥣" },
     { name: "Peanut butter banana wrap", category: "underweight", emoji: "🌯" },
@@ -45,11 +42,8 @@ const workouts = [
     { name: "Low-impact aerobics",       category: "obese",       emoji: "❤️" },
 ];
 
-
-// ─── 2. Gender toggle buttons ─────────────────────────────────────────────────
-
 const genderButtons = document.querySelectorAll(".gender-btn");
-let selectedGender = "male"; // default
+let selectedGender = "male"; 
 
 genderButtons.forEach(function(btn) {
     btn.addEventListener("click", function() {
@@ -61,15 +55,11 @@ genderButtons.forEach(function(btn) {
     });
 });
 
-
-// ─── 3. Form submit ───────────────────────────────────────────────────────────
-
 const form = document.getElementById("bmi-form");
 
 form.addEventListener("submit", function(e) {
-    e.preventDefault(); // stop page from refreshing
+    e.preventDefault(); 
 
-    // --- Capture form data into a structured OBJECT ---
     const userInfo = {
         weight: parseFloat(document.getElementById("weight").value),
         height: parseFloat(document.getElementById("height").value),
@@ -77,12 +67,10 @@ form.addEventListener("submit", function(e) {
         gender: selectedGender,
     };
 
-    // --- Calculate BMI ---
     const heightInMeters = userInfo.height / 100;
     const bmi = userInfo.weight / (heightInMeters * heightInMeters);
     const bmiRounded = Math.round(bmi * 10) / 10;
 
-    // --- Determine category ---
     let category = "";
     if (bmi < 18.5) {
         category = "underweight";
@@ -94,29 +82,23 @@ form.addEventListener("submit", function(e) {
         category = "obese";
     }
 
-    // --- Show BMI number and label ---
     document.getElementById("bmi-value").textContent = bmiRounded;
     document.getElementById("bmi-category").textContent =
         category.charAt(0).toUpperCase() + category.slice(1);
 
-    // --- Move the indicator bar ---
-    // BMI scale: 15 (left edge) to 40 (right edge)
     let percent = ((bmiRounded - 15) / (40 - 15)) * 100;
     if (percent < 2)   percent = 2;
     if (percent > 98)  percent = 98;
     document.getElementById("bmi-indicator").style.left = percent + "%";
 
-    // --- Show the results panel ---
     const resultsPanel = document.getElementById("results-panel");
     resultsPanel.classList.add("visible");
 
-    // --- Generate recommendations ---
     showRecommendations(category);
 });
 
 function showRecommendations(category) {
 
-    // FILTER — keep only items that match the user's category
     const filteredMeals    = meals.filter(function(item) {
         return item.category === category;
     });
@@ -125,7 +107,6 @@ function showRecommendations(category) {
         return item.category === category;
     });
 
-    // MAP — turn each filtered item into an HTML list item string
     const mealItems = filteredMeals.map(function(item) {
         return `<li>${item.emoji} ${item.name}</li>`;
     });
@@ -134,7 +115,6 @@ function showRecommendations(category) {
         return `<li>${item.emoji} ${item.name}</li>`;
     });
 
-    // BUILD the two cards as HTML strings
     const cardsHTML = `
         <div class="recommendation-grid">
             <div class="rec-card">
@@ -151,7 +131,5 @@ function showRecommendations(category) {
             </div>
         </div>
     `;
-
-    // INJECT into the page via DOM
     document.getElementById("ai-output").innerHTML = cardsHTML;
 }

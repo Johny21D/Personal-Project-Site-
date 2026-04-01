@@ -354,56 +354,6 @@
         }
         .card-link:hover { gap: 10px; }
 
-        /* ─── How It Works ─── */
-        .how-section { background: var(--cream); }
-        .how-header { text-align: center; margin-bottom: 56px; }
-        .how-header h2 { font-family: 'Fraunces', serif; font-size: clamp(1.8rem, 3.5vw, 2.4rem); color: var(--text-main); margin-bottom: 12px; }
-        .how-header p { color: var(--text-muted); font-size: 0.97rem; }
-
-        .steps-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0;
-            position: relative;
-        }
-        .steps-row::before {
-            content: '';
-            position: absolute;
-            top: 32px; left: 16.6%; right: 16.6%;
-            height: 2px;
-            background: repeating-linear-gradient(90deg, var(--green-light) 0, var(--green-light) 8px, transparent 8px, transparent 18px);
-        }
-
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 0 24px;
-            animation: fadeUp 0.5s ease both;
-        }
-        .step:nth-child(2) { animation-delay: 0.1s; }
-        .step:nth-child(3) { animation-delay: 0.2s; }
-
-        .step-num {
-            width: 64px; height: 64px;
-            border-radius: 50%;
-            background: var(--brown);
-            color: var(--cream-dark);
-            font-family: 'Fraunces', serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 4px 16px rgba(109,86,75,0.25);
-        }
-        .step h3 { font-family: 'Fraunces', serif; font-size: 1.1rem; margin-bottom: 10px; color: var(--text-main); }
-        .step p { font-size: 0.87rem; color: var(--text-muted); line-height: 1.7; }
-
         /* ─── CTA Banner ─── */
         .cta-section {
             background: linear-gradient(135deg, var(--green-dark) 0%, #000000 100%);

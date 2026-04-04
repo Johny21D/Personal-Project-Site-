@@ -131,5 +131,5 @@ function showRecommendations(category) {
             </div>
         </div>
     `;
-    document.getElementById("ai-output").innerHTML = cardsHTML;
+    document.getElementById("recommendation-output").innerHTML = cardsHTML;
 }

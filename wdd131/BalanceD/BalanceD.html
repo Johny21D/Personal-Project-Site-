@@ -1,20 +1,28 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BalanceD</title>
-    <link rel="stylesheet" href="BalanceD.css">
+
+    <!-- Preconnect for fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Non-render-blocking font load -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+    </noscript>
+
+    <link rel="stylesheet" href="BalanceD.css">
 </head>
 <body>
 
 <!-- ── Header ── -->
 <header>
     <div class="logo">
-        <img src="../Images/Logo-removebg-preview.png" alt="Logo" onerror="this.style.display='none'">
+        <img src="../Images/Logo-removebg-preview.png" alt="BalanceD Logo" width="54" height="54" fetchpriority="high">
         <p>BalanceD</p>
     </div>
     <nav>
@@ -34,45 +42,6 @@
         <p>BalanceD helps you take control of your physical well-being through data-driven tracking. Calculate your BMI, monitor your diet, and crush your fitness goals — all in one place.</p>
         <div class="hero-cta">
             <a href="BMI.html" class="btn-primary">Calculate My BMI</a>
-            <a href="#features" class="btn-outline">Explore Features</a>
-        </div>
-        <div class="hero-stats">
-            <div class="stat">
-                <span class="stat-num">3</span>
-                <span class="stat-label">Core Tools</span>
-            </div>
-            <div class="stat">
-                <span class="stat-num">100%</span>
-                <span class="stat-label">Free to Use</span>
-            </div>
-            <div class="stat">
-                <span class="stat-num">∞</span>
-                <span class="stat-label">Progress Tracking</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="hero-visual">
-        <div class="hero-img-card">
-            <div class="hero-img-placeholder">🏃‍♂️</div>
-            <div class="mini-stats">
-                <div class="mini-stat-card">
-                    <div class="label">BMI Score</div>
-                    <div class="value">22.4</div>
-                </div>
-                <div class="mini-stat-card">
-                    <div class="label">Category</div>
-                    <div class="value" style="font-size:1rem;">Normal ✓</div>
-                </div>
-                <div class="mini-stat-card">
-                    <div class="label">Calories</div>
-                    <div class="value">1,840</div>
-                </div>
-                <div class="mini-stat-card">
-                    <div class="label">Workouts</div>
-                    <div class="value">4/wk</div>
-                </div>
-            </div>
         </div>
     </div>
 </section>
@@ -87,9 +56,9 @@
 
     <div class="card-container">
         <!-- Goal Card -->
-        <div class="feature-card goal">
+        <div class="feature-card">
             <div class="card-img-wrap">
-                <img src="../Images/Goal.png" alt="Goal Setting"
+                <img src="../Images/Goal.png" alt="Goal Setting" width="400" height="220" loading="lazy"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                 <div class="card-img-placeholder goal-bg" style="display:none;">🎯</div>
                 <span class="card-tag">Goals</span>
@@ -97,14 +66,13 @@
             <div class="card-body">
                 <h3>Precision Goal Setting</h3>
                 <p>Turn vague intentions into measurable progress. Whether it's a BMI target, a tournament prep, or a strength milestone — define your "why" and stay disciplined with structured, time-bound objectives.</p>
-                <a href="#" class="card-link">Learn more →</a>
             </div>
         </div>
 
         <!-- Diet Card -->
-        <div class="feature-card Diet">
+        <div class="feature-card">
             <div class="card-img-wrap">
-                <img src="../Images/Diet.png" alt="Diet Management"
+                <img src="../Images/Diet.png" alt="Diet Management" width="400" height="220" loading="lazy"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                 <div class="card-img-placeholder diet-bg" style="display:none;">🥗</div>
                 <span class="card-tag">Nutrition</span>
@@ -112,14 +80,13 @@
             <div class="card-body">
                 <h3>Smart Nutrition Tracking</h3>
                 <p>Fuel your body right. Log your daily intake, align meals with your health goals, and get data-driven insights on macronutrients — from calorie deficits for weight loss to protein targets for muscle gain.</p>
-                <a href="#" class="card-link">Learn more →</a>
             </div>
         </div>
 
         <!-- Workout Card -->
-        <div class="feature-card workout">
+        <div class="feature-card">
             <div class="card-img-wrap">
-                <img src="../Images/Workout.png" alt="Workout Tracker"
+                <img src="../Images/Workout.png" alt="Workout Tracker" width="400" height="220" loading="lazy"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
                 <div class="card-img-placeholder workout-bg" style="display:none;">💪</div>
                 <span class="card-tag">Workouts</span>
@@ -127,12 +94,10 @@
             <div class="card-body">
                 <h3>Workout Suite</h3>
                 <p>From HIIT to heavy Pull Days — record sets, reps, and resistance levels to track your performance over time. Integrates with your goals and diet for a truly complete fitness ecosystem.</p>
-                <a href="#" class="card-link">Learn more →</a>
             </div>
         </div>
     </div>
 </section>
-
 
 <!-- ── CTA Banner ── -->
 <section class="cta-section">
@@ -146,9 +111,9 @@
     <span class="footer-brand">BalanceD © 2025</span>
     <nav>
         <ul>
-            <li><a href="Facebook">Facebook</a></li>
-            <li><a href="Instagram">Instagram</a></li>
-            <li><a href="Contact us">Contact Us</a></li>
+            <li><a href="https://facebook.com">Facebook</a></li>
+            <li><a href="https://instagram.com">Instagram</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
         </ul>
     </nav>
 </footer>

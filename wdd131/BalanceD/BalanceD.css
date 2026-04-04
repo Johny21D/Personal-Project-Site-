@@ -66,6 +66,41 @@ nav a::after {
 nav a:hover { color: #f0dea4; }
 nav a:hover::after { width: 100%; }
 
+/* Burger Menu */
+.burger-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.burger-line {
+    width: 100%;
+    height: 3px;
+    background: #f0dea4;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.burger-menu[aria-expanded="true"] .burger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.burger-menu[aria-expanded="true"] .burger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-menu[aria-expanded="true"] .burger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
 /* ─── Hero Section ─── */
 .hero {
     background: #4a3830;
@@ -358,8 +393,50 @@ footer nav a:hover { color: #f0dea4; }
 @media (max-width: 600px) {
     header { padding: 0 4%; }
     .logo p { font-size: 1.3rem; }
-    nav ul { gap: 18px; }
-    nav a { font-size: 0.82rem; }
+
+    /* Mobile Navigation */
+    .burger-menu { display: flex; }
+    nav ul {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background: #000000;
+        flex-direction: column;
+        gap: 0;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
+    nav ul.open {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+    nav ul li {
+        border-bottom: 1px solid rgba(240,222,164,0.1);
+    }
+    nav ul li:last-child {
+        border-bottom: none;
+    }
+    nav ul li a {
+        display: block;
+        padding: 16px 0;
+        font-size: 1rem;
+        color: rgba(207,193,193,0.9);
+    }
+    nav ul li a:hover,
+    nav ul li a:focus {
+        color: #f0dea4;
+        outline: none;
+        background: rgba(240,222,164,0.05);
+        border-radius: 4px;
+    }
+
     .hero-stats { gap: 20px; }
     footer { justify-content: center; text-align: center; }
 }

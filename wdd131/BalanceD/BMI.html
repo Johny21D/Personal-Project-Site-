@@ -19,6 +19,11 @@
         <p>BalanceD</p>
     </div>
     <nav>
+        <button class="burger-menu" aria-label="Toggle navigation menu" aria-expanded="false">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </button>
         <ul>
             <li><a href="BalanceD.html">Home</a></li>
             <li><a href="BMI.html">BMI</a></li>
@@ -41,15 +46,15 @@
             <div class="fields-grid">
                 <div class="field-container">
                     <label for="weight">Weight (kg)</label>
-                    <input type="number" id="weight" class="input-field" placeholder="e.g. 70" min="1" required>
+                    <input type="number" id="weight" class="input-field"  min="1" required>
                 </div>
                 <div class="field-container">
                     <label for="height">Height (cm)</label>
-                    <input type="number" id="height" class="input-field" placeholder="e.g. 175" min="1" required>
+                    <input type="number" id="height" class="input-field"  min="1" required>
                 </div>
                 <div class="field-container">
                     <label for="age">Age</label>
-                    <input type="number" id="age" class="input-field" placeholder="e.g. 25" min="1" required>
+                    <input type="number" id="age" class="input-field" min="1" required>
                 </div>
                 <div class="field-container">
                     <label>Gender</label>
@@ -85,7 +90,7 @@
             </div>
         </div>
 
-        <div class="recommendationsection">
+        <div class="recommendation-section">
             <div class="recommendation-section-title">Personalized Recommendations</div>
             <div id="recommendation-output">
                 <div class="loading-state">

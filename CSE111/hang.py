@@ -1,794 +1,525 @@
 import tkinter as tk
 from tkinter import messagebox
 import random
-import math
 
 # ─────────────────────────────────────────
-#  Word List
+#  Word Categories
 # ─────────────────────────────────────────
-WORD_LIST = [
-    "python", "hangman", "keyboard", "function", "variable",
-    "algorithm", "developer", "database", "interface", "compiler",
-    "network", "security", "software", "hardware", "library",
-    "framework", "debugging", "iteration", "recursion", "syntax",
-]
-
-MAX_WRONG = 6
-CW, CH   = 360, 340      # canvas size (slightly wider for big characters)
-FIG_X    = 220           # horizontal anchor (rope centre)
-ROPE_Y   = 49            # top of rope / bottom of beam
-
-# ─────────────────────────────────────────
-#  Characters
-# ─────────────────────────────────────────
-CHARACTERS = {
-    "Addison": {
-        "weight_lbs": 165, "height_ft": "5'5\"",
-        "sw": 0.80,  "sh": 0.92,          # width / height scale vs Johnny baseline
-        "skin": "#F8D5B0", "hair": "#8B1A1A",
-        "shirt": "#9b59b6", "pants": "#4a235a",
-        "gender": "f",
-        "btn_bg": "#3d1060", "btn_fg": "#f0c0ff",
-    },
-    "Johnny": {
-        "weight_lbs": 180, "height_ft": "5'9\"",
-        "sw": 1.00,  "sh": 1.00,
-        "skin": "#C68642", "hair": "#1a1a1a",
-        "shirt": "#c0392b", "pants": "#2c3e50",
-        "gender": "m",
-        "btn_bg": "#4a1500", "btn_fg": "#ffc8a0",
-    },
-    "Adam": {
-        "weight_lbs": 220, "height_ft": "5'8\"",
-        "sw": 1.30,  "sh": 0.99,
-        "skin": "#D4956A", "hair": "#2c1810",
-        "shirt": "#2471a3", "pants": "#1a252f",
-        "gender": "m",
-        "btn_bg": "#0d3060", "btn_fg": "#b0d8ff",
-    },
-    "Hollie": {
-        "weight_lbs": 220, "height_ft": "5'10\"",
-        "sw": 1.22,  "sh": 1.04,
-        "skin": "#FFD8B1", "hair": "#DAA520",
-        "shirt": "#d81b8a", "pants": "#4a0060",
-        "gender": "f",
-        "btn_bg": "#6a0050", "btn_fg": "#ffc0e0",
-    },
-    "John": {
-        "weight_lbs": 260, "height_ft": "6'0\"",
-        "sw": 1.60,  "sh": 1.08,
-        "skin": "#FDBCB4", "hair": "#8B0000",
-        "shirt": "#1e8449", "pants": "#145a32",
-        "gender": "m",
-        "btn_bg": "#0d3d1f", "btn_fg": "#a0f0c0",
-    },
+CATEGORIES = {
+    "🎲  Random Mix":      None,
+    "💻  Technology": [
+        "python","algorithm","compiler","database","debugging","framework",
+        "function","hardware","interface","iteration","keyboard","library",
+        "network","recursion","security","software","syntax","variable",
+        "developer","bandwidth",
+    ],
+    "🍕  Food": [
+        "pizza","burger","spaghetti","lasagna","burrito","pancake","waffle",
+        "sandwich","noodles","dumpling","croissant","omelette","risotto",
+        "quesadilla","falafel","samosa","ramen","paella","kebab","strudel",
+    ],
+    "🍎  Fruits": [
+        "apple","mango","papaya","banana","cherry","apricot","avocado",
+        "blueberry","coconut","dragonfruit","elderberry","fig","grape",
+        "guava","kiwi","lemon","lychee","melon","nectarine","persimmon",
+    ],
+    "🪐  Space & Planets": [
+        "mercury","venus","earth","mars","jupiter","saturn","uranus",
+        "neptune","pluto","asteroid","comet","galaxy","nebula","pulsar",
+        "quasar","supernova","blackhole","cosmos","eclipse","solstice",
+    ],
+    "🔬  Science": [
+        "atom","molecule","electron","neutron","proton","photon","gravity",
+        "magnetism","evolution","chromosome","hypothesis","catalyst",
+        "osmosis","entropy","inertia","refraction","diffusion","radiation",
+        "isotope","polymer",
+    ],
+    "🔷  Shapes": [
+        "circle","square","triangle","pentagon","hexagon","octagon",
+        "ellipse","rhombus","trapezoid","parallelogram","cylinder",
+        "pyramid","cuboid","sphere","prism","cone","torus","crescent",
+        "heptagon","decagon",
+    ],
+    "🐾  Animals": [
+        "elephant","giraffe","penguin","cheetah","dolphin","crocodile",
+        "kangaroo","porcupine","flamingo","chameleon","wolverine",
+        "platypus","armadillo","orangutan","chimpanzee","narwhal",
+        "axolotl","cassowary","capybara","meerkat",
+    ],
+    "🌍  Countries": [
+        "brazil","canada","denmark","ethiopia","finland","germany",
+        "hungary","indonesia","jamaica","kenya","latvia","morocco",
+        "nigeria","portugal","romania","singapore","thailand","ukraine",
+        "vietnam","zimbabwe",
+    ],
+    "⚽  Sports": [
+        "football","basketball","volleyball","badminton","gymnastics",
+        "swimming","wrestling","archery","fencing","cycling","skateboard",
+        "marathon","triathlon","rowing","cricket","lacrosse","handball",
+        "polo","snooker","bobsled",
+    ],
+    "🌊  Ocean & Sea": [
+        "shark","whale","octopus","jellyfish","seahorse","stingray",
+        "lobster","starfish","barracuda","clownfish","manatee","nautilus",
+        "porpoise","seadragon","anglerfish","cuttlefish","manta","urchin",
+        "anemone","plankton",
+    ],
+    "⚡  Mythology": [
+        "zeus","poseidon","athena","hermes","apollo","artemis",
+        "hephaestus","ares","demeter","dionysus","minotaur","cyclops",
+        "medusa","chimera","hydra","phoenix","centaur","griffin",
+        "siren","kraken",
+    ],
+    "🎵  Music": [
+        "melody","harmony","rhythm","tempo","octave","symphony","concerto",
+        "sonata","cadence","vibrato","arpeggio","staccato","crescendo",
+        "diminuendo","treble","soprano","baritone","overture","serenade",
+        "ballad",
+    ],
+    "🎨  Colors & Art": [
+        "crimson","turquoise","magenta","scarlet","indigo","cobalt",
+        "vermillion","chartreuse","ochre","sienna","periwinkle","cerulean",
+        "maroon","lavender","fuchsia","watercolor","portrait","mosaic",
+        "fresco","palette",
+    ],
+    "🌩️  Weather": [
+        "hurricane","tornado","blizzard","thunderstorm","monsoon","cyclone",
+        "typhoon","avalanche","drought","hailstorm","rainbow","lightning",
+        "fogbank","dewpoint","overcast","barometer","humidity","equinox",
+        "solstice","permafrost",
+    ],
 }
+CATEGORIES["🎲  Random Mix"] = [w for k,v in CATEGORIES.items() if v for w in v]
+CATEGORY_NAMES = list(CATEGORIES.keys())
 
 # ─────────────────────────────────────────
-#  Time-of-day colour palettes
+#  Character Configs
+#  head_r  : head radius
+#  neck_w  : half-width of neck rectangle
+#  body_w  : half-width of torso at widest (belly bulge adds to this)
+#  body_h  : torso height in pixels
+#  leg_h   : leg height in pixels (body_bottom → sole)
+#  arm_dx  : horizontal reach of upper arm
+#  arm_dy  : vertical drop of upper arm
+#  fore    : extra horizontal reach of forearm beyond arm_dx
+#  shirt / shirtdk / pant / skin / hair : colours
 # ─────────────────────────────────────────
-THEMES = {
-    "night": {
-        "root_bg": "#080814", "border": "#2d1800",
-        "label_dim": "#55557a", "label_fg": "#e2b714",
-        "status_fg": "#a8dadc", "word_bg": "#0f0a00", "word_fg": "#f0e68c",
-        "title_fg": "#e2b714", "sub_fg": "#33334a",
-        "btn_bg": "#16162a", "btn_fg": "#c0c0e0",
-    },
-    "morning": {
-        "root_bg": "#1a0a2e", "border": "#6d4c41",
-        "label_dim": "#8d6e63", "label_fg": "#ff8f00",
-        "status_fg": "#ffcc80", "word_bg": "#120800", "word_fg": "#ffe082",
-        "title_fg": "#ff8f00", "sub_fg": "#4e342e",
-        "btn_bg": "#1c0f00", "btn_fg": "#ffcc80",
-    },
-    "day": {
-        "root_bg": "#3a9bd5", "border": "#5d4037",
-        "label_dim": "#1a5276", "label_fg": "#e65100",
-        "status_fg": "#0d3349", "word_bg": "#fdf6e3", "word_fg": "#4a1500",
-        "title_fg": "#bf360c", "sub_fg": "#78909c",
-        "btn_bg": "#b3e5fc", "btn_fg": "#01579b",
-    },
+CHAR_CFG = {
+    # Johny – fit, 5'9" → slim shoulders, long legs
+    "Johny": dict(head_r=15, neck_w=4, body_w=13, body_h=65, leg_h=90,
+                  arm_dx=34, arm_dy=30, fore=13,
+                  skin="#F5C5AE", hair="#3d2b1f",
+                  shirt="#2980b9", shirtdk="#1a5276", pant="#2c3e50"),
+    # Holly – tall + kinda fat → wide torso, long legs
+    "Holly": dict(head_r=17, neck_w=5, body_w=21, body_h=70, leg_h=88,
+                  arm_dx=42, arm_dy=34, fore=14,
+                  skin="#F5D0BE", hair="#c0392b",
+                  shirt="#e84393", shirtdk="#9b1a5c", pant="#6c3483"),
+    # John  – fat + tall → very wide torso, big head, long legs
+    "John":  dict(head_r=20, neck_w=7, body_w=26, body_h=72, leg_h=88,
+                  arm_dx=48, arm_dy=38, fore=15,
+                  skin="#F0C090", hair="#1a1a1a",
+                  shirt="#27ae60", shirtdk="#1a7040", pant="#1a252f"),
+    # Adam  – chubby, 5'8" → medium height, wide-ish torso
+    "Adam":  dict(head_r=17, neck_w=5, body_w=19, body_h=62, leg_h=83,
+                  arm_dx=38, arm_dy=30, fore=13,
+                  skin="#F5C5AE", hair="#3d2b1f",
+                  shirt="#8e44ad", shirtdk="#5e2d73", pant="#2c3e50"),
+    # Addison – short, 5'5" → smaller overall
+    "Addison": dict(head_r=14, neck_w=4, body_w=12, body_h=52, leg_h=73,
+                    arm_dx=30, arm_dy=26, fore=12,
+                    skin="#FDDBB4", hair="#8B4513",
+                    shirt="#e67e22", shirtdk="#a04010", pant="#784212"),
+    # Monkey – drawn separately
+    "🐒 Monkey": None,
 }
+CHARS = list(CHAR_CFG.keys())
 
 # ─────────────────────────────────────────
-#  Colour utilities
+#  Layout / display constants
 # ─────────────────────────────────────────
+MAX_WRONG  = 6
+CW, CH     = 340, 330
+FIG_X      = 213
+ROPE_Y     = 49
+NECK_TOP   = 97      # y where noose meets the top of the neck
 
-def _adj(hex_col, factor):
-    h = hex_col.lstrip("#")
-    r, g, b = int(h[0:2],16), int(h[2:4],16), int(h[4:6],16)
-    r = min(255, max(0, int(r * factor)))
-    g = min(255, max(0, int(g * factor)))
-    b = min(255, max(0, int(b * factor)))
-    return f"#{r:02x}{g:02x}{b:02x}"
+STARS = [(14,10),(42,26),(88,7),(138,19),(186,9),(223,30),(258,5),
+         (28,50),(103,39),(198,21),(163,48),(53,17),(308,40),(280,68)]
 
-def _dk(c): return _adj(c, 0.68)
-def _lt(c): return _adj(c, 1.30)
-
+BGTIMES = ["🌅 Morning", "☀️ Noon", "🌙 Night"]
 
 # ─────────────────────────────────────────
-#  Game logic
+#  Background helpers
 # ─────────────────────────────────────────
 
-def choose_word():
-    return random.choice(WORD_LIST).lower()
+def _draw_bg(c, tod):
+    if tod == "🌙 Night":
+        c.create_rectangle(0, 0, CW, CH, fill="#080814", outline="")
+        c.create_rectangle(0, CH-55, CW, CH, fill="#0f0800", outline="")
+        # crescent moon
+        c.create_oval(268, 16, 308, 56, fill="#fffde7", outline="")
+        c.create_oval(279, 12, 317, 50, fill="#080814", outline="")
+        for sx, sy in STARS:
+            c.create_oval(sx, sy, sx+2, sy+2, fill="#d0d8ff", outline="")
+        c.create_rectangle(0, CH-30, CW, CH, fill="#0c0700", outline="")
 
-def build_display(word, guessed):
-    return "  ".join(l.upper() if l in guessed else "_" for l in word)
+    elif tod == "🌅 Morning":
+        # simulated sunrise gradient with strips
+        strips = ["#1a0533","#3d1259","#7a2552","#c44a3a",
+                  "#e8703a","#f5a24a","#ffc86a","#ffe098"]
+        sh = (CH - 30) // len(strips)
+        for i, col in enumerate(strips):
+            c.create_rectangle(0, i*sh, CW, (i+1)*sh+1, fill=col, outline="")
+        # rising sun peeking at horizon (partially covered by ground)
+        c.create_oval(CW//2-32, CH-62, CW//2+32, CH-4, fill="#ffdd00",
+                      outline="#ffaa00", width=2)
+        # horizon warm glow band
+        c.create_rectangle(0, CH-42, CW, CH-30, fill="#ff9900", outline="")
+        # ground
+        c.create_rectangle(0, CH-30, CW, CH, fill="#1a0c00", outline="")
 
-def check_win(word, guessed):
-    return all(l in guessed for l in word)
+    elif tod == "☀️ Noon":
+        # sky gradient: deeper blue top, lighter near horizon
+        c.create_rectangle(0, 0, CW, int(CH*0.55), fill="#3a7bd5", outline="")
+        c.create_rectangle(0, int(CH*0.55), CW, CH-30, fill="#87cefa", outline="")
+        # bright sun (top-right corner where moon lives at night)
+        c.create_oval(264, 10, 314, 60, fill="#ffe135", outline="#ffcc00", width=3)
+        # sun inner disc highlight
+        c.create_oval(274, 20, 304, 50, fill="#fff176", outline="")
+        # clouds
+        for bx, by, w, h in [(40,35,55,20),(160,18,60,18),(30,60,40,15)]:
+            c.create_oval(bx, by, bx+w, by+h, fill="#ffffff", outline="")
+            c.create_oval(bx+8, by-10, bx+w-8, by+8, fill="#ffffff", outline="")
+        # green grass ground
+        c.create_rectangle(0, CH-30, CW, CH, fill="#2d6a1a", outline="")
+        c.create_rectangle(0, CH-32, CW, CH-27, fill="#3d8a22", outline="")
 
 
-# ─────────────────────────────────────────
-#  Body coordinate calculator
-# ─────────────────────────────────────────
-
-def compute_body(sw=1.0, sh=1.0):
-    """Return a dict of all key figure coordinates scaled by sw (width) and sh (height)."""
-    cx = FIG_X
-
-    def iw(v): return max(1, int(v * sw))   # scale by width
-    def ih(v): return max(1, int(v * sh))   # scale by height
-    def iwa(v, mn): return max(mn, int(v * sw))
-    def iha(v, mn): return max(mn, int(v * sh))
-
-    # ── Neck ──────────────────────────────
-    neck_top = 97
-    neck_h   = iha(10, 7)
-    neck_bot = neck_top + neck_h
-    neck_hw  = iwa(4, 3)
-
-    # ── Head ──────────────────────────────
-    # head_rx uses a direct formula (NOT iwa) because sw is already embedded in it.
-    # iwa would multiply by sw a second time, making heavy characters grotesquely wide.
-    head_rx  = max(12, int(15 * (0.62 + 0.38 * sw)))   # heavier → wider face
-    head_ry  = iha(16, 13)
-    head_cy  = neck_bot + head_ry
-
-    # ── Torso ─────────────────────────────
-    torso_top = neck_bot + 2
-    torso_hw  = iwa(13, 10)
-    torso_h   = iha(68, 55)
-    torso_bot = torso_top + torso_h
-
-    # belly bulge for heavier characters (sw > 1.1) — direct formula, not iwa
-    belly_extra = max(0, int((sw - 1.0) * 18))
-
-    # ── Arms ──────────────────────────────
-    shoulder_y    = torso_top + iha(10, 7)
-    shoulder_hw   = iwa(10, 8)          # half-width at shoulder
-    sleeve_dx     = iwa(24, 16)         # upper arm horizontal reach
-    sleeve_dy     = iha(26, 20)         # upper arm vertical drop
-    elbow_lx      = cx - shoulder_hw - sleeve_dx
-    elbow_rx      = cx + shoulder_hw + sleeve_dx
-    elbow_y       = shoulder_y + sleeve_dy
-    fa_dx         = iwa(13, 9)          # forearm horizontal reach
-    fa_dy         = iha(25, 20)         # forearm vertical drop
-    lhand_x       = elbow_lx - fa_dx
-    rhand_x       = elbow_rx + fa_dx
-    hand_y        = elbow_y + fa_dy
-    hand_r        = iwa(5, 4)
-    arm_sleeve_w  = iwa(11, 7)
-    arm_skin_w    = iwa(7, 5)
-
-    # ── Legs ──────────────────────────────
-    hip_y    = torso_bot
-    leg_hw   = iwa(13, 10)              # pants half-width per leg
-    pants_h  = iha(58, 48)
-    knee_y   = hip_y + pants_h
-    shin_dy  = iha(32, 26)
-    ankle_y  = knee_y + shin_dy
-    ankle_off = iha(4, 3)               # ankles splay out slightly
-    leg_skin_w = iwa(7, 5)
-    sock_w   = iwa(9, 7)
-
-    # ── Shoe ──────────────────────────────
-    shoe_ext  = iwa(14, 10)             # how far shoe sticks out
-    shoe_toe  = iwa(3, 2)              # toe rise
-    shoe_bot  = ankle_y + iha(10, 8)
-
-    return dict(
-        cx=cx, sw=sw, sh=sh,
-        neck_top=neck_top, neck_bot=neck_bot, neck_hw=neck_hw,
-        head_rx=head_rx, head_ry=head_ry, head_cy=head_cy,
-        torso_top=torso_top, torso_hw=torso_hw, torso_h=torso_h,
-        torso_bot=torso_bot, belly_extra=belly_extra,
-        shoulder_y=shoulder_y, shoulder_hw=shoulder_hw,
-        elbow_lx=elbow_lx, elbow_rx=elbow_rx, elbow_y=elbow_y,
-        lhand_x=lhand_x, rhand_x=rhand_x, hand_y=hand_y,
-        hand_r=hand_r, arm_sleeve_w=arm_sleeve_w, arm_skin_w=arm_skin_w,
-        hip_y=hip_y, leg_hw=leg_hw, knee_y=knee_y,
-        ankle_y=ankle_y, ankle_off=ankle_off,
-        leg_skin_w=leg_skin_w, sock_w=sock_w,
-        shoe_ext=shoe_ext, shoe_toe=shoe_toe, shoe_bot=shoe_bot,
-    )
-
+def _draw_gallows(c, tod):
+    wood  = "#5c3010" if tod == "🌙 Night" else "#7a4520" if tod == "🌅 Morning" else "#8B5220"
+    dark  = "#3a1c08" if tod == "🌙 Night" else "#4a2a10" if tod == "🌅 Morning" else "#6a3a10"
+    rope  = "#6B5335"
+    c.create_rectangle(12,  275, 162, 300, fill=wood, outline=dark)  # base
+    c.create_rectangle(76,  36,  93,  280, fill=wood, outline=dark)  # pole
+    c.create_rectangle(82,  30,  238, 50,  fill=wood, outline=dark)  # beam
+    c.create_line(77, 38, 128, 31, fill=dark, width=3)               # brace
+    c.create_line(FIG_X, ROPE_Y, FIG_X, 95, fill=rope, width=4)     # rope
+    c.create_oval(FIG_X-7, 88, FIG_X+7, 102, outline=rope, width=3) # noose
 
 # ─────────────────────────────────────────
-#  Main scene draw entry point
+#  Human figure helpers
 # ─────────────────────────────────────────
 
-def draw_scene(canvas, wrong_count, time_of_day="night", char_key="Johnny", dead=False):
-    c = canvas
-    c.delete("all")
-    char = CHARACTERS[char_key]
-    b    = compute_body(char["sw"], char["sh"])
-
-    # Sky
-    if time_of_day == "night":   _draw_night_sky(c)
-    elif time_of_day == "morning": _draw_morning_sky(c)
-    else:                         _draw_day_sky(c)
-
-    _draw_gallows(c)
-    _draw_rope(c)
-
-    if wrong_count >= 1: _draw_head(c, b, char, dead)
-    if wrong_count >= 2: _draw_body(c, b, char)
-    if wrong_count >= 3: _draw_left_arm(c, b, char)
-    if wrong_count >= 4: _draw_right_arm(c, b, char)
-    if wrong_count >= 5: _draw_left_leg(c, b, char)
-    if wrong_count >= 6: _draw_right_leg(c, b, char)
+def _h_coords(cfg):
+    """Return (head_cy, body_top, body_bot) derived from cfg."""
+    hcy = NECK_TOP + cfg['head_r'] + 5
+    bt  = hcy + cfg['head_r'] + 2
+    bb  = bt  + cfg['body_h']
+    return hcy, bt, bb
 
 
-# ─────────────────────────────────────────
-#  Sky painters
-# ─────────────────────────────────────────
-
-def _draw_night_sky(c):
-    c.create_rectangle(0, 0, CW, CH, fill="#080814", outline="")
-    c.create_rectangle(0, CH-55, CW, CH, fill="#0f0800", outline="")
-    c.create_rectangle(0, CH-57, CW, CH-52, fill="#1c0f00", outline="")
-    # Crescent moon
-    c.create_oval(278, 16, 318, 56, fill="#fffde7", outline="")
-    c.create_oval(289, 12, 327, 50, fill="#080814", outline="")
-    # Stars
-    for sx,sy in [(14,10),(42,26),(88,7),(145,19),(192,9),(230,30),(265,5),
-                  (28,50),(110,39),(204,21),(168,48),(55,17),(320,40),(286,68),
-                  (72,30),(155,60),(240,45),(12,70),(308,20),(124,55)]:
-        c.create_oval(sx, sy, sx+2, sy+2, fill="#d0d8ff", outline="")
-    c.create_rectangle(0, CH-30, CW, CH, fill="#0c0700", outline="")
-    c.create_line(0, CH-30, CW, CH-30, fill="#1e1000", width=2)
-
-
-def _draw_morning_sky(c):
-    for y1,y2,col in [(0,60,"#1a0a2e"),(60,120,"#6a1b4d"),
-                      (120,180,"#c62828"),(180,230,"#ef6c00"),
-                      (230,270,"#ff8f00"),(270,310,"#ffca28")]:
-        c.create_rectangle(0, y1, CW, y2, fill=col, outline="")
-    for sx,sy in [(14,10),(42,18),(92,7),(145,14),(195,9),(56,12),(12,22),(310,14)]:
-        c.create_oval(sx, sy, sx+2, sy+2, fill="#e8d5ff", outline="")
-    # Rising sun (right side)
-    sx, sy = 308, 290
-    for r,col in [(40,"#fff9c4"),(30,"#ffe57f"),(22,"#ffca28")]:
-        c.create_arc(sx-r, sy-r, sx+r, sy+r, start=0, extent=180, fill=col, outline="")
-    c.create_rectangle(0, 260, CW, 278, fill="#ffca28", outline="")
-    c.create_rectangle(0, 270, CW, 310, fill="#ff8f00", outline="")
-    for tx in [10,35,58,300,320,340]:
-        c.create_polygon(tx,272, tx+10,250, tx+20,272, fill="#1a0a00", outline="")
-    c.create_rectangle(0, CH-30, CW, CH, fill="#1b0000", outline="")
-    c.create_line(0, CH-30, CW, CH-30, fill="#3e1010", width=2)
-
-
-def _draw_day_sky(c):
-    for y1,y2,col in [(0,50,"#2980b9"),(50,110,"#3a9bd5"),(110,180,"#52c2f5"),
-                      (180,250,"#74d7f7"),(250,310,"#a8e6ff")]:
-        c.create_rectangle(0, y1, CW, y2, fill=col, outline="")
-    sx, sy = 310, 45
-    for r,col in [(34,"#fff9c4"),(26,"#fff176"),(18,"#ffee58"),(12,"#ffd600")]:
-        c.create_oval(sx-r, sy-r, sx+r, sy+r, fill=col, outline="")
-    for ang in range(0, 360, 30):
-        a = math.radians(ang)
-        c.create_line(sx+20*math.cos(a), sy+20*math.sin(a),
-                      sx+34*math.cos(a), sy+34*math.sin(a),
-                      fill="#ffd600", width=2, capstyle="round")
-    def cloud(cx2,cy2,s=1.0):
-        for bx,by,br in [(-28,6,22),(-10,0,28),(12,0,28),(30,6,22),(0,-8,22)]:
-            r=int(br*s); bx2=int(bx*s); by2=int(by*s)
-            c.create_oval(cx2+bx2-r,cy2+by2-r,cx2+bx2+r,cy2+by2+r,fill="white",outline="white")
-    cloud(80,55,1.0); cloud(200,40,0.75); cloud(28,92,0.6)
-    c.create_rectangle(0, CH-30, CW, CH, fill="#2e7d32", outline="")
-    for gx in range(0, CW, 18):
-        c.create_line(gx, CH-30, gx+8, CH, fill="#256427", width=1)
-
-
-# ─────────────────────────────────────────
-#  Gallows & Rope  (fixed, no per-character scaling)
-# ─────────────────────────────────────────
-
-def _draw_gallows(c):
-    # Base log
-    c.create_rectangle(12,290,162,304,fill="#2d1608",outline="")
-    c.create_rectangle(12,280,162,290,fill="#5c3010",outline="")
-    c.create_rectangle(12,277,162,281,fill="#7a4520",outline="")
-    c.create_oval(9,276,20,304,fill="#4a2510",outline="#2d1608")
-    c.create_oval(155,276,166,304,fill="#4a2510",outline="#2d1608")
-    # Vertical pole
-    c.create_rectangle(90,36,95,282,fill="#3a1c08",outline="")
-    c.create_rectangle(78,36,90,282,fill="#5c3010",outline="")
-    c.create_rectangle(78,36,82,282,fill="#7a4520",outline="")
-    for gy in range(52,280,22):
-        c.create_line(79,gy,94,gy+9,fill="#4a2510",width=1)
-    # Horizontal beam
-    c.create_rectangle(84,44,242,50,fill="#3a1c08",outline="")
-    c.create_rectangle(84,33,242,44,fill="#5c3010",outline="")
-    c.create_rectangle(84,30,242,34,fill="#7a4520",outline="")
-    for gx in range(100,240,26):
-        c.create_line(gx,31,gx+5,49,fill="#4a2510",width=1)
-    # Diagonal brace
-    c.create_polygon(79,38,95,38,132,31,129,42,fill="#4a2510",outline="#3a1c08",width=1)
-    c.create_line(79,38,130,31,fill="#7a4520",width=1)
-    # Bolts
-    for bx,by in [(81,33),(232,33)]:
-        c.create_oval(bx,by,bx+8,by+8,fill="#666",outline="#333")
-        c.create_oval(bx+2,by+2,bx+6,by+6,fill="#aaa",outline="")
-
-
-def _draw_rope(c):
-    rx = FIG_X
-    for i in range(10):
-        y1=ROPE_Y+i*4; y2=y1+3
-        tw=2 if i%2==0 else -2
-        c.create_line(rx+tw,y1,rx-tw,y2,fill="#8B7355",width=3,capstyle="round")
-    c.create_line(rx,89,rx,96,fill="#6B5335",width=4)
-    c.create_oval(rx-7,88,rx+7,103,outline="#6B5335",width=3,fill="")
-
-
-# ─────────────────────────────────────────
-#  Figure part drawers (all parameterised)
-# ─────────────────────────────────────────
-
-def _draw_head(c, b, char, dead=False):
-    cx   = b["cx"]
-    cy   = b["head_cy"]
-    rx   = b["head_rx"]
-    ry   = b["head_ry"]
-    sw   = b["sw"]
-    skin = char["skin"]
-    hair = char["hair"]
-    gen  = char["gender"]
-
-    # Neck
-    c.create_rectangle(cx - b["neck_hw"], b["neck_top"],
-                       cx + b["neck_hw"], b["neck_bot"],
-                       fill=skin, outline="")
-    # Drop shadow
-    c.create_oval(cx-rx-2, cy-ry-3, cx+rx+4, cy+ry+5, fill="#04020a", outline="")
-    # Head oval
-    c.create_oval(cx-rx, cy-ry, cx+rx, cy+ry,
-                  fill=skin, outline=_dk(skin), width=2)
-    # Ears
-    ew = max(4, int(5*sw))
-    c.create_oval(cx-rx-ew, cy-ew, cx-rx, cy+ew, fill=_dk(skin), outline=_dk(skin))
-    c.create_oval(cx+rx, cy-ew, cx+rx+ew, cy+ew,    fill=_dk(skin), outline=_dk(skin))
-
-    # ── Hair ──────────────────────────────────────────────────
-    hw = max(2, int(2.2*sw))   # hair strand width
-    if gen == "f":
-        # Crown strands
-        for hx,extra in [(-rx+3,6),(-rx//2,9),(0,10),(rx//2,9),(rx-3,6)]:
-            c.create_line(cx+hx, cy-ry+2, cx+hx, cy-ry-extra,
-                          fill=hair, width=hw, capstyle="round")
-        # Long side locks (down to shoulder area)
-        lock_len = max(40, int(48 * b["sh"]))
-        for lx_off in [cx-rx+3, cx-rx+9]:
-            c.create_line(lx_off, cy, lx_off-4, cy+lock_len,
-                          fill=hair, width=max(3,int(4*sw)), capstyle="round")
-        for lx_off in [cx+rx-3, cx+rx-9]:
-            c.create_line(lx_off, cy, lx_off+4, cy+lock_len,
-                          fill=hair, width=max(3,int(4*sw)), capstyle="round")
-    else:
-        # Short male hair
-        for hx,extra in [(-rx+3,6),(-rx//2+1,8),(0,9),(rx//2-1,8),(rx-3,6)]:
-            c.create_line(cx+hx, cy-ry+2, cx+hx, cy-ry-extra,
-                          fill=hair, width=hw, capstyle="round")
-
-    # ── Face ──────────────────────────────────────────────────
-    ey1 = cy - max(5, int(7*sw))
-    ey2 = cy - max(1, int(1*sw))
-    ew2 = max(5, int(7*sw))
+def _h_head(c, cx, cfg, dead):
+    hr  = cfg['head_r']
+    hcy = NECK_TOP + hr + 5
+    nw  = cfg['neck_w']
+    sk  = cfg['skin']
+    so  = "#C0876A"
+    # neck
+    c.create_rectangle(cx-nw, NECK_TOP, cx+nw, hcy-hr+2, fill=sk, outline="")
+    # head oval
+    c.create_oval(cx-hr, hcy-hr, cx+hr, hcy+hr, fill=sk, outline=so, width=2)
+    # ears
+    c.create_oval(cx-hr-5, hcy-5, cx-hr+1, hcy+6, fill=sk, outline=so)
+    c.create_oval(cx+hr-1, hcy-5, cx+hr+5, hcy+6, fill=sk, outline=so)
+    # hair tufts
+    for hx in range(-hr+3, hr-2, 4):
+        c.create_line(cx+hx, hcy-hr+2, cx+hx, hcy-hr-9,
+                      fill=cfg['hair'], width=2, capstyle="round")
+    # eye positions (slightly left-of-centre for worried look)
+    le = cx - hr//2 - 2   # left-eye left edge
+    re = cx + hr//8        # right-eye left edge
+    ew = hr//2 + 1         # eye oval width
 
     if dead:
-        for ex in [cx - max(7,int(9*sw)), cx + max(2,int(4*sw))]:
-            esz = max(4, int(5*sw))
-            c.create_line(ex, ey1, ex+esz, ey2, fill="#1a0800", width=2)
-            c.create_line(ex+esz, ey1, ex, ey2, fill="#1a0800", width=2)
-        c.create_arc(cx-max(5,int(7*sw)), cy+max(3,int(5*sw)),
-                     cx+max(5,int(7*sw)), cy+max(11,int(14*sw)),
+        for ex in [le, re]:
+            c.create_line(ex, hcy-8, ex+ew, hcy-2, fill="#1a0800", width=2)
+            c.create_line(ex+ew, hcy-8, ex, hcy-2, fill="#1a0800", width=2)
+        c.create_arc(cx-6, hcy+4, cx+6, hcy+11,
                      start=0, extent=180, style=tk.ARC, outline="#5c1a00", width=2)
-        c.create_oval(cx-max(3,int(4*sw)), cy+max(9,int(12*sw)),
-                      cx+max(3,int(4*sw)), cy+max(16,int(19*sw)),
-                      fill="#d63031", outline="#b71c1c")
+        c.create_oval(cx-3, hcy+9, cx+3, hcy+15, fill="#d63031", outline="#b71c1c")
     else:
-        for ex in [cx-max(9,int(11*sw)), cx+max(2,int(4*sw))]:
-            c.create_oval(ex, ey1, ex+ew2, ey2, fill="white", outline="#aaa")
-            c.create_oval(ex+max(1,int(2*sw)), ey1+1, ex+max(4,int(5*sw)), ey2-1,
-                          fill="#1a1000", outline="")
-            c.create_oval(ex+max(1,int(2*sw)), ey1+1, ex+max(2,int(3*sw)), ey1+2,
-                          fill="white", outline="")
-        # Worried eyebrows
-        by0 = ey1 - max(2,int(3*sw))
-        c.create_line(cx-max(9,int(11*sw)), by0, cx-max(3,int(4*sw)), by0+2,
-                      fill=_dk(hair), width=2)
-        c.create_line(cx+max(3,int(4*sw)), by0+2, cx+max(9,int(11*sw)), by0,
-                      fill=_dk(hair), width=2)
-        # Nose
-        nr = max(2, int(2*sw))
-        c.create_oval(cx-nr, cy-nr, cx+nr, cy+nr, fill=_dk(skin), outline="")
-        # Nervous frown
-        c.create_arc(cx-max(5,int(6*sw)), cy+max(4,int(6*sw)),
-                     cx+max(5,int(6*sw)), cy+max(11,int(13*sw)),
+        for ex in [le, re]:
+            c.create_oval(ex, hcy-9, ex+ew+1, hcy-3, fill="white", outline="#aaa")
+            c.create_oval(ex+2, hcy-8, ex+ew-1, hcy-5, fill="#1a1000", outline="")
+        # worried eyebrows
+        c.create_line(le-1, hcy-hr+4, le+ew+1, hcy-hr+7, fill=cfg['hair'], width=2)
+        c.create_line(re-1, hcy-hr+7, re+ew+2, hcy-hr+4, fill=cfg['hair'], width=2)
+        c.create_oval(cx-2, hcy-2, cx+2, hcy+2, fill="#E09888", outline="")
+        c.create_arc(cx-5, hcy+5, cx+5, hcy+11,
                      start=200, extent=140, style=tk.ARC, outline="#8B4513", width=2)
 
 
-def _draw_body(c, b, char):
-    cx  = b["cx"]
-    tt  = b["torso_top"]
-    tb  = b["torso_bot"]
-    hw  = b["torso_hw"]
-    bex = b["belly_extra"]   # belly bulge amount
-    sw  = b["sw"]
-    sh  = char["shirt"]
-    mid = tt + (tb - tt) // 2   # vertical midpoint for belly
-
-    # Torso polygon — bulges at belly for heavier builds
-    outer = [
-        cx-hw, tt,
-        cx+hw, tt,
-        cx+hw+bex, mid,
-        cx+hw, tb,
-        cx-hw, tb,
-        cx-hw-bex, mid,
-    ]
-    c.create_polygon(outer, fill=sh, outline=_dk(sh), width=1)
-
-    # Left highlight strip
-    hl_pts = [
-        cx-hw, tt,
-        cx-hw+max(5,int(7*sw)), tt,
-        cx-hw+max(4,int(6*sw))-bex//3, mid,
-        cx-hw+max(5,int(7*sw)), tb,
-        cx-hw, tb,
-        cx-hw-bex, mid,
-    ]
-    c.create_polygon(hl_pts, fill=_lt(sh), outline="")
-
+def _h_body(c, cx, bt, bb, cfg):
+    bw  = cfg['body_w']
+    # belly bulge on wider characters
+    bulge = max(0, bw - 14)
+    mid   = (bt + bb) // 2
+    pts   = [cx-bw, bt,  cx+bw, bt,
+             cx+bw+bulge, mid,
+             cx+bw, bb,  cx-bw, bb,
+             cx-bw-bulge, mid]
+    c.create_polygon(pts, fill=cfg['shirt'], outline=cfg['shirtdk'])
     # V-collar
-    cw2 = max(6, int(8*sw))
-    c.create_line(cx-cw2, tt, cx, tt+max(14,int(16*sw)), cx+cw2, tt,
-                  fill=_dk(sh), width=2)
-
-    # Buttons
-    btn_gap = max(13, int(15*sw))
-    btn_start = tt + max(20, int(22*sw))
-    bsz = max(2, int(3*sw))
-    for i in range(4):
-        by = btn_start + i * btn_gap
-        if by < tb - 4:
-            c.create_oval(cx-bsz, by-bsz, cx+bsz, by+bsz,
-                          fill=_dk(sh), outline=_dk(_dk(sh)))
+    c.create_line(cx-bw//2, bt, cx, bt+14, cx+bw//2, bt,
+                  fill=cfg['shirtdk'], width=2)
+    # buttons
+    for by in range(mid-6, bb-8, 13):
+        c.create_oval(cx-3, by-3, cx+3, by+3, fill=cfg['shirtdk'], outline="")
 
 
-def _draw_left_arm(c, b, char):
-    cx  = b["cx"]
-    sh  = char["shirt"]
-    sk  = char["skin"]
-    slw = b["arm_sleeve_w"]
-    skw = b["arm_skin_w"]
-    # Sleeve (upper arm) — two passes for highlight
-    c.create_line(cx-b["shoulder_hw"], b["shoulder_y"],
-                  b["elbow_lx"], b["elbow_y"],
-                  width=slw+2, fill=sh,      capstyle="round")
-    c.create_line(cx-b["shoulder_hw"], b["shoulder_y"],
-                  b["elbow_lx"], b["elbow_y"],
-                  width=slw-2, fill=_lt(sh), capstyle="round")
-    # Forearm
-    c.create_line(b["elbow_lx"], b["elbow_y"],
-                  b["lhand_x"],  b["hand_y"],
-                  width=skw, fill=sk, capstyle="round")
-    # Hand
-    hr = b["hand_r"]
-    hx = b["lhand_x"]; hy = b["hand_y"]
-    c.create_oval(hx-hr, hy-hr, hx+hr, hy+hr, fill=sk, outline=_dk(sk))
+def _h_arm(c, cx, side, bt, cfg):
+    bw = cfg['body_w']
+    sk = cfg['skin']
+    sw = max(9, int(bw * 0.78))   # sleeve thickness scales with body
+    x1 = cx + side * int(bw * 0.8)
+    y1 = bt + 10
+    x2 = cx + side * cfg['arm_dx']
+    y2 = y1 + cfg['arm_dy']
+    x3 = cx + side * (cfg['arm_dx'] + cfg['fore'])
+    y3 = y2 + 22
+    c.create_line(x1, y1, x2, y2, width=sw,  fill=cfg['shirt'], capstyle="round")
+    c.create_line(x2, y2, x3, y3, width=6,   fill=sk,           capstyle="round")
+    c.create_oval(x3-5, y3-4, x3+5, y3+4,   fill=sk, outline="#C0876A")
 
 
-def _draw_right_arm(c, b, char):
-    cx  = b["cx"]
-    sh  = char["shirt"]
-    sk  = char["skin"]
-    slw = b["arm_sleeve_w"]
-    skw = b["arm_skin_w"]
-    c.create_line(cx+b["shoulder_hw"], b["shoulder_y"],
-                  b["elbow_rx"], b["elbow_y"],
-                  width=slw+2, fill=sh,      capstyle="round")
-    c.create_line(cx+b["shoulder_hw"], b["shoulder_y"],
-                  b["elbow_rx"], b["elbow_y"],
-                  width=slw-2, fill=_lt(sh), capstyle="round")
-    c.create_line(b["elbow_rx"], b["elbow_y"],
-                  b["rhand_x"],  b["hand_y"],
-                  width=skw, fill=sk, capstyle="round")
-    hr = b["hand_r"]
-    hx = b["rhand_x"]; hy = b["hand_y"]
-    c.create_oval(hx-hr, hy-hr, hx+hr, hy+hr, fill=sk, outline=_dk(sk))
+def _h_leg(c, cx, side, bb, cfg):
+    bw = cfg['body_w']
+    lh = cfg['leg_h']
+    s  = side
+
+    pb  = bb + int(lh * 0.62)   # pant hem / knee y
+    fy  = bb + lh                # sole y
+
+    xi  = cx + s * 2             # inner pant edge
+    xo  = cx + s * bw            # outer pant edge
+    xs  = cx + s * (bw + 5)      # shin x (slightly beyond outer edge)
+
+    # pant leg polygon (slight taper inward at knee)
+    c.create_polygon([xi, bb,  xo, bb,  xs, pb,  xi, pb],
+                     fill=cfg['pant'], outline="#1a252f")
+    # shin (skin)
+    c.create_line(xs, pb, xs, fy-6, width=7, fill=cfg['skin'], capstyle="round")
+    # sock
+    c.create_line(xs, fy-14, xs, fy-6, width=9, fill="#e0e0e0", capstyle="round")
+    # shoe
+    sy = fy - 6
+    if s < 0:
+        shoe = [xs-16, sy,  xs+6, sy,  xs+8, fy,  xs-16, fy+2,  xs-20, sy+4]
+    else:
+        shoe = [xs-6,  sy,  xs+16, sy,  xs+20, sy+4,  xs+16, fy+2,  xs-8, fy]
+    c.create_polygon(shoe, fill="#1a1a1a", outline="#0d0d0d")
 
 
-def _draw_left_leg(c, b, char):
-    cx   = b["cx"]
-    hw   = b["leg_hw"]
-    hy   = b["hip_y"]
-    ky   = b["knee_y"]
-    ay   = b["ankle_y"]
-    aoff = b["ankle_off"]
-    sk   = char["skin"]
-    pnt  = char["pants"]
-
-    lax  = cx - aoff     # left ankle x (slightly left of centre)
-
-    # Pants leg polygon
-    c.create_polygon([cx-2, hy, cx-hw, hy, cx-hw-aoff, ky, cx-aoff, ky],
-                     fill=pnt, outline=_dk(pnt))
-    # Highlight strip on pants
-    c.create_polygon([cx-2, hy, cx-hw//2, hy, cx-hw//2-aoff//2, ky, cx-aoff, ky],
-                     fill=_lt(pnt), outline="")
-    # Shin (skin)
-    c.create_line(lax, ky, lax-aoff//2, ay, width=b["leg_skin_w"], fill=sk, capstyle="round")
-    # Sock
-    c.create_line(lax-aoff//2, ay-6, lax-aoff//2, ay+4,
-                  width=b["sock_w"], fill="#e0e0e0", capstyle="round")
-    # Shoe
-    ext = b["shoe_ext"]
-    bty = b["shoe_bot"]
-    sx  = lax - aoff//2
-    c.create_polygon([sx-ext, ay, sx+4, ay, sx+6, bty, sx-ext-2, bty+2, sx-ext-4, ay+4],
-                     fill="#1a1a1a", outline="#0d0d0d")
-    c.create_line(sx-ext, ay, sx+4, ay, fill="#333", width=1)
-
-
-def _draw_right_leg(c, b, char):
-    cx   = b["cx"]
-    hw   = b["leg_hw"]
-    hy   = b["hip_y"]
-    ky   = b["knee_y"]
-    ay   = b["ankle_y"]
-    aoff = b["ankle_off"]
-    sk   = char["skin"]
-    pnt  = char["pants"]
-
-    rax = cx + aoff
-
-    c.create_polygon([cx+2, hy, cx+hw, hy, cx+hw+aoff, ky, cx+aoff, ky],
-                     fill=pnt, outline=_dk(pnt))
-    c.create_polygon([cx+hw//2, hy, cx+hw, hy, cx+hw+aoff, ky, cx+hw//2+aoff//2, ky],
-                     fill=_lt(pnt), outline="")
-    c.create_line(rax, ky, rax+aoff//2, ay, width=b["leg_skin_w"], fill=sk, capstyle="round")
-    c.create_line(rax+aoff//2, ay-6, rax+aoff//2, ay+4,
-                  width=b["sock_w"], fill="#e0e0e0", capstyle="round")
-    ext = b["shoe_ext"]
-    bty = b["shoe_bot"]
-    sx  = rax + aoff//2
-    c.create_polygon([sx-4, ay, sx+ext, ay, sx+ext+4, ay+4, sx+ext+2, bty+2, sx-6, bty],
-                     fill="#1a1a1a", outline="#0d0d0d")
-    c.create_line(sx-4, ay, sx+ext, ay, fill="#333", width=1)
+def draw_human(c, wrong, dead, cfg):
+    cx = FIG_X
+    hcy, bt, bb = _h_coords(cfg)
+    if wrong >= 1: _h_head(c, cx, cfg, dead)
+    if wrong >= 2: _h_body(c, cx, bt, bb, cfg)
+    if wrong >= 3: _h_arm(c, cx, -1, bt, cfg)
+    if wrong >= 4: _h_arm(c, cx, +1, bt, cfg)
+    if wrong >= 5: _h_leg(c, cx, -1, bb, cfg)
+    if wrong >= 6: _h_leg(c, cx, +1, bb, cfg)
 
 
 # ─────────────────────────────────────────
-#  Character selection dialog
+#  Monkey figure
 # ─────────────────────────────────────────
 
-class CharacterDialog(tk.Toplevel):
-    def __init__(self, parent, current="Johnny"):
-        super().__init__(parent)
-        self.result = current
-        self.title("🪢  Choose Your Victim")
-        self.resizable(False, False)
-        self.configure(bg="#0d0d1a")
-        self.grab_set()
-        self.protocol("WM_DELETE_WINDOW", lambda: None)
+def draw_monkey(c, wrong, dead):
+    cx  = FIG_X
+    FUR = "#8B4513"
+    PAL = "#D2A679"   # palm / muzzle
 
-        tk.Label(self, text="🪢  Who Gets Hanged?",
-                 font=("Georgia", 15, "bold"), bg="#0d0d1a", fg="#e2b714").pack(pady=(20,4))
-        tk.Label(self, text="Their figure will reflect their real build.",
-                 font=("Georgia", 9, "italic"), bg="#0d0d1a", fg="#44445a").pack(pady=(0,16))
+    if wrong >= 1:
+        # neck
+        c.create_rectangle(cx-3, NECK_TOP, cx+3, 104, fill=FUR, outline="")
+        # head (rounder, wider)
+        c.create_oval(cx-19, 100, cx+19, 138, fill=FUR, outline="#6B3410", width=2)
+        # big round ears
+        for ex, ew in [(-30, 14), (16, 14)]:
+            c.create_oval(cx+ex, 110, cx+ex+ew*2, 130, fill=FUR, outline="#6B3410")
+            c.create_oval(cx+ex+3, 113, cx+ex+ew*2-3, 127, fill="#c47a52", outline="")
+        # muzzle bump
+        c.create_oval(cx-12, 120, cx+12, 137, fill=PAL, outline="#A0622A")
+        # nostrils
+        c.create_oval(cx-5, 124, cx-2, 128, fill="#5c2e00", outline="")
+        c.create_oval(cx+2, 124, cx+5, 128, fill="#5c2e00", outline="")
+        # eyes
+        if dead:
+            for ox in [cx-10, cx+4]:
+                c.create_line(ox, 106, ox+6, 113, fill="#1a0800", width=2)
+                c.create_line(ox+6, 106, ox, 113, fill="#1a0800", width=2)
+        else:
+            c.create_oval(cx-12, 106, cx-5,  114, fill="#FFD700", outline="#8B6914")
+            c.create_oval(cx+5,  106, cx+12, 114, fill="#FFD700", outline="#8B6914")
+            c.create_oval(cx-10, 108, cx-7,  112, fill="#1a0800", outline="")
+            c.create_oval(cx+7,  108, cx+10, 112, fill="#1a0800", outline="")
+        # mouth
+        if dead:
+            c.create_arc(cx-8, 129, cx+8, 137, start=0, extent=180,
+                         style=tk.ARC, outline="#5c2e00", width=2)
+        else:
+            c.create_arc(cx-7, 128, cx+7, 135, start=200, extent=140,
+                         style=tk.ARC, outline="#5c2e00", width=2)
 
-        for name, ch in CHARACTERS.items():
-            symbol = "♀" if ch["gender"] == "f" else "♂"
-            lbl    = f"{symbol}  {name:<10}  {ch['weight_lbs']} lbs  •  {ch['height_ft']}"
-            tk.Button(self, text=lbl,
-                      font=("Courier", 11, "bold"),
-                      bg=ch["btn_bg"], fg=ch["btn_fg"],
-                      relief="flat", padx=16, pady=10,
-                      cursor="hand2", width=28,
-                      command=lambda n=name: self._pick(n)).pack(pady=4)
+    if wrong >= 2:
+        # round body
+        c.create_oval(cx-16, 137, cx+16, 197, fill=FUR, outline="#6B3410", width=2)
+        # lighter belly patch
+        c.create_oval(cx-9, 147, cx+9, 190, fill="#a0522d", outline="")
 
-        tk.Frame(self, bg="#0d0d1a", height=16).pack()
-        self.update_idletasks()
-        px = parent.winfo_rootx() + parent.winfo_width()//2  - self.winfo_width()//2
-        py = parent.winfo_rooty() + parent.winfo_height()//2 - self.winfo_height()//2
-        self.geometry(f"+{px}+{py}")
-        parent.wait_window(self)
+    if wrong >= 3:
+        # left arm – long ape arm droops low
+        c.create_line(cx-14, 148, cx-52, 205, width=11, fill=FUR, capstyle="round")
+        c.create_line(cx-52, 205, cx-57, 240, width=9,  fill=FUR, capstyle="round")
+        c.create_oval(cx-64, 235, cx-50, 247, fill=PAL, outline="#6B3410")
 
-    def _pick(self, name):
-        self.result = name
-        self.destroy()
+    if wrong >= 4:
+        c.create_line(cx+14, 148, cx+52, 205, width=11, fill=FUR, capstyle="round")
+        c.create_line(cx+52, 205, cx+57, 240, width=9,  fill=FUR, capstyle="round")
+        c.create_oval(cx+50, 235, cx+64, 247, fill=PAL, outline="#6B3410")
 
+    if wrong >= 5:
+        # left leg (short, monkey-style)
+        c.create_line(cx-9,  195, cx-16, 252, width=10, fill=FUR, capstyle="round")
+        c.create_oval(cx-24, 247, cx-8,  259, fill=PAL, outline="#6B3410")
 
-# ─────────────────────────────────────────
-#  Time-of-day dialog
-# ─────────────────────────────────────────
-
-class TimeDialog(tk.Toplevel):
-    OPTIONS = [
-        ("night",   "🌙",  "Night",          "#1a1a3e", "#c0c8ff"),
-        ("morning", "🌅",  "Morning  (Dawn)","#3e1500", "#ffcc80"),
-        ("day",     "☀️",  "Day",             "#0d3b6e", "#aee6ff"),
-    ]
-
-    def __init__(self, parent, current="night"):
-        super().__init__(parent)
-        self.result = current
-        self.title("⏰  Time of Day")
-        self.resizable(False, False)
-        self.configure(bg="#0d0d1a")
-        self.grab_set()
-        self.protocol("WM_DELETE_WINDOW", lambda: None)
-
-        tk.Label(self, text="⏰  Choose the Time of Day",
-                 font=("Georgia", 14, "bold"), bg="#0d0d1a", fg="#e2b714").pack(pady=(20,4))
-        tk.Label(self, text="The sky and atmosphere will match your choice.",
-                 font=("Georgia", 9, "italic"), bg="#0d0d1a", fg="#44445a").pack(pady=(0,16))
-
-        for key, emoji, label, bg, fg in self.OPTIONS:
-            tk.Button(self, text=f"{emoji}  {label}",
-                      font=("Georgia", 12, "bold"),
-                      bg=bg, fg=fg,
-                      relief="flat", padx=24, pady=10,
-                      cursor="hand2", width=22,
-                      command=lambda k=key: self._pick(k)).pack(pady=5)
-
-        tk.Frame(self, bg="#0d0d1a", height=14).pack()
-        self.update_idletasks()
-        px = parent.winfo_rootx() + parent.winfo_width()//2  - self.winfo_width()//2
-        py = parent.winfo_rooty() + parent.winfo_height()//2 - self.winfo_height()//2
-        self.geometry(f"+{px}+{py}")
-        parent.wait_window(self)
-
-    def _pick(self, choice):
-        self.result = choice
-        self.destroy()
+    if wrong >= 6:
+        c.create_line(cx+9,  195, cx+16, 252, width=10, fill=FUR, capstyle="round")
+        c.create_oval(cx+8,  247, cx+24, 259, fill=PAL, outline="#6B3410")
+        # tail (curving from lower back)
+        c.create_line(cx+14, 188, cx+42, 207, cx+58, 192, cx+54, 174,
+                      fill=FUR, width=6, smooth=True, capstyle="round")
 
 
 # ─────────────────────────────────────────
-#  GUI App
+#  Master scene draw
+# ─────────────────────────────────────────
+
+def draw_scene(c, wrong, dead, tod, char):
+    c.delete("all")
+    _draw_bg(c, tod)
+    _draw_gallows(c, tod)
+    if char == "🐒 Monkey":
+        draw_monkey(c, wrong, dead)
+    else:
+        draw_human(c, wrong, dead, CHAR_CFG[char])
+
+
+# ─────────────────────────────────────────
+#  App
 # ─────────────────────────────────────────
 
 class HangmanApp:
     def __init__(self, root):
-        self.root        = root
+        self.root = root
         self.root.title("⚰  Hangman  ⚰")
         self.root.resizable(False, False)
+        self.root.configure(bg="#080814")
 
-        self.word        = ""
-        self.guessed     = set()
-        self.wrong       = set()
-        self.buttons     = {}
-        self.char_key    = "Johnny"
-        self.time_of_day = "night"
-        self.section_labels = []
+        self.category_var = tk.StringVar(value=CATEGORY_NAMES[0])
+        self.bg_var       = tk.StringVar(value="🌙 Night")
+        self.char_var     = tk.StringVar(value="Johny")
 
+        self.word = self.guessed = self.wrong = self.buttons = None
         self._build_ui()
-
-        # Ask character first, then time
-        self._ask_character()
-        self._ask_time()
-
-        self._apply_theme()
         self._new_game()
 
-    # ── Theme ──────────────────────────────────────────────────────────
-
-    def _apply_theme(self):
-        t  = THEMES[self.time_of_day]
-        BG = t["root_bg"]
-        self.root.configure(bg=BG)
-
-        def recolour(w):
-            cls = w.winfo_class()
-            try:
-                if cls in ("Label", "Frame"):
-                    w.configure(bg=BG)
-                if cls == "Canvas":
-                    w.configure(bg=BG, highlightbackground=t["border"])
-            except tk.TclError:
-                pass
-            for child in w.winfo_children():
-                recolour(child)
-        recolour(self.root)
-
-        self.title_lbl.config(fg=t["title_fg"], bg=BG)
-        self.sub_lbl.config(fg=t["sub_fg"], bg=BG)
-        self.wrong_label.config(fg="#e63946", bg=BG)
-        self.lives_label.config(fg=t["label_fg"], bg=BG)
-        self.status_label.config(fg=t["status_fg"], bg=BG)
-        self.victim_lbl.config(fg=t["label_fg"], bg=BG)
-        self.word_outer.config(bg=t["word_bg"])
-        self.word_label.config(bg=t["word_bg"], fg=t["word_fg"])
-        for lbl in self.section_labels:
-            lbl.config(bg=BG, fg=t["label_dim"])
-        self.divider.config(bg=t["label_dim"])
-        for btn in self.buttons.values():
-            if btn.cget("state") == tk.NORMAL:
-                btn.config(bg=t["btn_bg"], fg=t["btn_fg"])
-
-    # ── UI Build ───────────────────────────────────────────────────────
+    # ── UI construction ──────────────────────────────────────────────────
 
     def _build_ui(self):
-        BG = "#080814"; DIM = "#55557a"
+        BG, DIM = "#080814", "#55557a"
 
-        self.title_lbl = tk.Label(self.root, text="— H A N G M A N —",
-                                  font=("Georgia", 22, "bold"), bg=BG, fg="#e2b714")
-        self.title_lbl.pack(pady=(14, 0))
-
-        self.sub_lbl = tk.Label(self.root,
-                                text="guess the word before it's too late…",
-                                font=("Georgia", 9, "italic"), bg=BG, fg="#33334a")
-        self.sub_lbl.pack(pady=(2, 6))
+        tk.Label(self.root, text="— H A N G M A N —",
+                 font=("Georgia", 22, "bold"), bg=BG, fg="#e2b714").pack(pady=(14,0))
+        tk.Label(self.root, text="guess the word before it's too late…",
+                 font=("Georgia", 9, "italic"), bg=BG, fg="#33334a").pack(pady=(2,6))
 
         top = tk.Frame(self.root, bg=BG)
         top.pack(padx=20, pady=4)
 
         self.canvas = tk.Canvas(top, width=CW, height=CH, bg=BG,
                                 highlightthickness=2, highlightbackground="#2d1800")
-        self.canvas.pack(side=tk.LEFT, padx=(0, 14))
+        self.canvas.pack(side=tk.LEFT, padx=(0,14))
 
         info = tk.Frame(top, bg=BG)
         info.pack(side=tk.LEFT, anchor="n", pady=6)
 
+        def lbl(text, font, fg, **kw):
+            return tk.Label(info, text=text, font=font, bg=BG, fg=fg, **kw)
+
         def section(text):
-            lbl = tk.Label(info, text=text, font=("Georgia", 8, "bold"), bg=BG, fg=DIM)
-            lbl.pack(anchor="w")
-            self.section_labels.append(lbl)
-            return lbl
+            lbl(text, ("Georgia", 8, "bold"), DIM).pack(anchor="w", pady=(6,0))
 
-        section("VICTIM")
-        self.victim_lbl = tk.Label(info, text="",
-                                   font=("Courier", 12, "bold"),
-                                   bg=BG, fg="#e2b714", wraplength=170, justify="left")
-        self.victim_lbl.pack(anchor="w", pady=(2, 12))
+        def dropdown(var, choices, cmd, width=15):
+            """Styled OptionMenu that matches the dark theme."""
+            m = tk.OptionMenu(info, var, *choices, command=cmd)
+            m.config(font=("Georgia", 9), bg="#16162a", fg="#7eb8d4",
+                     activebackground="#e2b714", activeforeground="#080814",
+                     highlightthickness=0, relief="flat", width=width)
+            m["menu"].config(font=("Georgia", 9), bg="#16162a", fg="#c0c0e0",
+                             activebackground="#e2b714", activeforeground="#080814",
+                             tearoff=False)
+            m.pack(anchor="w", pady=(3,0))
+            return m
 
+        # ── Background picker ─────────────────────────────────────────────
+        section("BACKGROUND")
+        dropdown(self.bg_var, BGTIMES,
+                 lambda _: self._refresh_ui(), width=12)
+
+        # ── Character picker ──────────────────────────────────────────────
+        section("CHARACTER")
+        dropdown(self.char_var, CHARS,
+                 lambda _: self._refresh_ui(), width=12)
+
+        # ── Category picker ───────────────────────────────────────────────
+        section("CATEGORY")
+        dropdown(self.category_var, CATEGORY_NAMES,
+                 lambda _: self._new_game(), width=17)
+
+        tk.Frame(info, bg="#1e1e30", height=1, width=165).pack(fill="x", pady=(10,4))
+
+        # ── Stats ─────────────────────────────────────────────────────────
         section("WRONG GUESSES")
-        self.wrong_label = tk.Label(info, text="", font=("Courier", 13, "bold"),
-                                    bg=BG, fg="#e63946", wraplength=168, justify="left")
-        self.wrong_label.pack(anchor="w", pady=(2, 12))
+        self.wrong_label = lbl("", ("Courier", 13, "bold"), "#e63946",
+                               wraplength=168, justify="left")
+        self.wrong_label.pack(anchor="w", pady=(2,8))
 
         section("LIVES REMAINING")
-        self.lives_label = tk.Label(info, text="", font=("Helvetica", 14),
-                                    bg=BG, fg="#e2b714")
-        self.lives_label.pack(anchor="w", pady=(2, 12))
+        self.lives_label = lbl("", ("Helvetica", 14), "#e2b714")
+        self.lives_label.pack(anchor="w", pady=(2,8))
 
-        section("CATEGORY")
-        tk.Label(info, text="💻  Programming / Tech",
-                 font=("Georgia", 10, "italic"), bg=BG, fg="#7eb8d4").pack(anchor="w", pady=(2,14))
-
-        self.divider = tk.Frame(info, bg="#1e1e30", height=1, width=165)
-        self.divider.pack(fill="x", pady=(0, 10))
+        tk.Frame(info, bg="#1e1e30", height=1, width=165).pack(fill="x", pady=(2,6))
 
         section("STATUS")
-        self.status_label = tk.Label(info, text="",
-                                     font=("Georgia", 10, "italic"),
-                                     bg=BG, fg="#a8dadc",
-                                     wraplength=165, justify="left")
-        self.status_label.pack(anchor="w", pady=(2, 0))
+        self.status_label = lbl("", ("Georgia", 10, "italic"), "#a8dadc",
+                                wraplength=165, justify="left")
+        self.status_label.pack(anchor="w", pady=(2,0))
 
-        self.word_outer = tk.Frame(self.root, bg="#0f0a00", bd=2, relief="sunken")
-        self.word_outer.pack(padx=24, pady=(6, 8), fill="x")
-        self.word_label = tk.Label(self.word_outer, text="",
+        # ── Word display ──────────────────────────────────────────────────
+        word_outer = tk.Frame(self.root, bg="#0f0a00", bd=2, relief="sunken")
+        word_outer.pack(padx=24, pady=(6,8), fill="x")
+        self.word_label = tk.Label(word_outer, text="",
                                    font=("Courier", 24, "bold"),
                                    bg="#0f0a00", fg="#f0e68c", pady=10, padx=12)
         self.word_label.pack()
 
+        # ── Keyboard ──────────────────────────────────────────────────────
         kb = tk.Frame(self.root, bg=BG)
-        kb.pack(padx=20, pady=(0, 6))
+        kb.pack(padx=20, pady=(0,6))
+        self.buttons = {}
         for row_str in ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]:
             row = tk.Frame(kb, bg=BG)
             row.pack(pady=2)
@@ -796,125 +527,79 @@ class HangmanApp:
                 btn = tk.Button(row, text=ch, width=3, height=1,
                                 font=("Helvetica", 10, "bold"),
                                 bg="#16162a", fg="#c0c0e0",
+                                activebackground="#e2b714", activeforeground="#080814",
                                 relief="raised", bd=2, cursor="hand2",
                                 command=lambda c=ch: self._on_guess(c.lower()))
                 btn.pack(side=tk.LEFT, padx=2)
                 self.buttons[ch] = btn
 
-        bottom = tk.Frame(self.root, bg=BG)
-        bottom.pack(pady=(4, 14))
-        for txt, col, fg2, cmd in [
-            ("🔄  New Game",        "#e2b714", "#080814", self._new_game),
-            ("🧍  Change Victim",   "#444466", "#c0c8ff", self._change_character),
-            ("⏰  Change Time",     "#334455", "#a0d8ff", self._change_time),
-        ]:
-            tk.Button(bottom, text=txt, font=("Georgia", 10, "bold"),
-                      bg=col, fg=fg2, relief="flat", padx=10, pady=6,
-                      cursor="hand2", command=cmd).pack(side=tk.LEFT, padx=4)
+        tk.Button(self.root, text="🔄  New Game",
+                  font=("Georgia", 12, "bold"),
+                  bg="#e2b714", fg="#080814", relief="flat",
+                  padx=14, pady=7, cursor="hand2",
+                  command=self._new_game).pack(pady=(4,14))
 
-    # ── Dialog helpers ─────────────────────────────────────────────────
-
-    def _ask_character(self):
-        dlg = CharacterDialog(self.root, current=self.char_key)
-        self.char_key = dlg.result
-        self._update_victim_label()
-
-    def _ask_time(self):
-        dlg = TimeDialog(self.root, current=self.time_of_day)
-        self.time_of_day = dlg.result
-
-    def _change_character(self):
-        self._ask_character()
-        self._apply_theme()
-        self._new_game()
-
-    def _change_time(self):
-        self._ask_time()
-        self._apply_theme()
-        self._refresh_ui()
-
-    def _update_victim_label(self):
-        ch = CHARACTERS[self.char_key]
-        sym = "♀" if ch["gender"] == "f" else "♂"
-        self.victim_lbl.config(
-            text=f"{sym} {self.char_key}\n{ch['weight_lbs']} lbs • {ch['height_ft']}")
-
-    # ── Game logic ─────────────────────────────────────────────────────
+    # ── Game logic ───────────────────────────────────────────────────────
 
     def _new_game(self):
-        self.word    = choose_word()
+        pool = CATEGORIES[self.category_var.get()]
+        self.word    = random.choice(pool).lower()
         self.guessed = set()
         self.wrong   = set()
-        t = THEMES[self.time_of_day]
         for btn in self.buttons.values():
-            btn.config(state=tk.NORMAL, bg=t["btn_bg"], fg=t["btn_fg"])
-        self._update_victim_label()
+            btn.config(state=tk.NORMAL, bg="#16162a", fg="#c0c0e0")
         self._refresh_ui()
 
     def _on_guess(self, letter):
         if letter in self.guessed or letter in self.wrong:
             return
-        if letter in self.word:
-            self.guessed.add(letter)
-            self.buttons[letter.upper()].config(state=tk.DISABLED, bg="#2a9d8f", fg="white")
-        else:
-            self.wrong.add(letter)
-            self.buttons[letter.upper()].config(state=tk.DISABLED, bg="#e63946", fg="white")
+        (self.guessed if letter in self.word else self.wrong).add(letter)
+        color = "#2a9d8f" if letter in self.word else "#e63946"
+        self.buttons[letter.upper()].config(state=tk.DISABLED, bg=color, fg="white")
         self._refresh_ui()
         self._check_end()
 
     def _refresh_ui(self):
-        w       = len(self.wrong)
-        is_dead = (w >= MAX_WRONG)
-        is_win  = check_win(self.word, self.guessed)
-        t       = THEMES[self.time_of_day]
-
-        draw_scene(self.canvas, w, self.time_of_day, self.char_key, dead=is_dead)
-        self.word_label.config(text=build_display(self.word, self.guessed))
+        w    = len(self.wrong)
+        dead = w >= MAX_WRONG
+        win  = all(l in self.guessed for l in self.word)
+        draw_scene(self.canvas, w, dead,
+                   self.bg_var.get(), self.char_var.get())
+        self.word_label.config(
+            text="  ".join(l.upper() if l in self.guessed else "_" for l in self.word))
         self.wrong_label.config(
             text="  ".join(sorted(self.wrong)).upper() if self.wrong else "—")
-
-        remaining = MAX_WRONG - w
-        self.lives_label.config(text="♥ " * remaining + "♡ " * w)
-
+        rem = MAX_WRONG - w
+        self.lives_label.config(text="♥ " * rem + "♡ " * w)
         if not self.wrong and not self.guessed:
-            self.status_label.config(text="Guess a letter to begin!", fg=t["status_fg"])
-        elif is_dead:
-            self.status_label.config(text=f"💀 {self.char_key}\n    has been hanged!", fg="#e63946")
-        elif is_win:
-            self.status_label.config(text=f"🎉 {self.char_key}\n    escaped!", fg="#2a9d8f")
+            self.status_label.config(text="Guess a letter to begin!", fg="#a8dadc")
+        elif dead:
+            self.status_label.config(text="💀  You've been hanged!", fg="#e63946")
+        elif win:
+            self.status_label.config(text="🎉  You escaped the noose!", fg="#2a9d8f")
         else:
-            pl = "guesses" if remaining != 1 else "guess"
+            pl = "guess" if rem == 1 else "guesses"
             self.status_label.config(
-                text=f"Keep going!\n{remaining} {pl} left.", fg=t["status_fg"])
+                text=f"Keep going!\n{rem} wrong {pl} left.", fg="#a8dadc")
 
     def _check_end(self):
-        ch = CHARACTERS[self.char_key]
-        if check_win(self.word, self.guessed):
-            self._disable_all()
-            messagebox.showinfo("🎉  Escape!",
-                f"{self.char_key} lives another day!\n\nWord: {self.word.upper()}")
+        win  = all(l in self.guessed for l in self.word)
+        dead = len(self.wrong) >= MAX_WRONG
+        if win or dead:
+            for btn in self.buttons.values():
+                btn.config(state=tk.DISABLED)
+            if win:
+                messagebox.showinfo("🎉  You Escaped!",
+                    f"Brilliant! You guessed:\n\n  {self.word.upper()}"
+                    "\n\nClick OK to play again.")
+            else:
+                messagebox.showerror("💀  You Were Hanged!",
+                    f"The word was:\n\n  {self.word.upper()}"
+                    "\n\nClick OK to try again.")
             self._new_game()
-        elif len(self.wrong) >= MAX_WRONG:
-            self._disable_all()
-            messagebox.showerror("💀  Hanged!",
-                f"{self.char_key} ({ch['weight_lbs']} lbs, {ch['height_ft']}) "
-                f"has been hanged!\n\nWord: {self.word.upper()}")
-            self._new_game()
-
-    def _disable_all(self):
-        for btn in self.buttons.values():
-            btn.config(state=tk.DISABLED)
 
 
-# ─────────────────────────────────────────
-#  Entry point
-# ─────────────────────────────────────────
-
-def main():
+if __name__ == "__main__":
     root = tk.Tk()
     HangmanApp(root)
     root.mainloop()
-
-if __name__ == "__main__":
-    main()
